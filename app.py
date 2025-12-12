@@ -21,10 +21,10 @@ app.layout = html.Div([
     html.Div([  # Wrap slider in Div for styling
         dcc.Slider(
             id='r-slider',
-            min=-100000,
-            max=100000,
-            value=1,
-            step=0.1,
+            min=-10000,
+            max=10000,
+            value=0,
+            step=1000,
             marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
         )
     ], style={'width': '300px', 'margin': 'auto'}),
