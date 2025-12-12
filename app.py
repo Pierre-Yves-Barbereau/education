@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec 12 16:41:21 2025
-
-@author: pierre
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Fri Dec 12 14:54:53 2025
 
 @author: pierre
@@ -32,8 +24,8 @@ app.layout = html.Div([
             min=-100000,
             max=100000,
             value=1,
-            step=10000,
-            marks={i: str(i) for i in range(-10, 11, 5)}
+            step=0.1,
+            marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
         )
     ], style={'width': '300px', 'margin': 'auto'}),
     html.Label('Valeur de p', style={'fontSize': '24px'}),
@@ -71,6 +63,18 @@ app.layout = html.Div([
     ], style={'width': '300px', 'margin': 'auto'})
 ], style={'textAlign': 'center', 'padding': '20px', 'maxWidth': '800px', 'margin': 'auto'})
 
+# Callback to update p-slider min and value based on n0
+@app.callback(
+    [Output('p-slider', 'min'),
+     Output('p-slider', 'value')],
+    [Input('n0-slider', 'value'),
+     Input('p-slider', 'value')]
+)
+def update_p_slider(n0, current_p):
+    min_p = n0
+    new_value = max(min_p, current_p)
+    return min_p, new_value
+
 # Define the callback to update the graph and title based on slider values
 @app.callback(
     [Output('interactive-graph', 'figure'),
@@ -82,7 +86,7 @@ app.layout = html.Div([
 )
 def update_graph(r, p, up, n0):
     # Generate n values
-    n = np.arange(2000, 2026)
+    n = np.arange(2000, 2051)
     # Compute u_n values based on the function
     un = r * (n - p) + up
     
@@ -103,7 +107,7 @@ def update_graph(r, p, up, n0):
     fig.update_layout(
         xaxis_title='n',
         yaxis_title='u_n',
-        xaxis_range=[2000, 2025],
+        xaxis_range=[2000, 2050],
         yaxis_range=[-100000, 100000]
     )
     
