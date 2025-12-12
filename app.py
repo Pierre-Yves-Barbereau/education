@@ -13,55 +13,59 @@ from dash import Dash, dcc, html, Input, Output
 # Initialize the Dash app
 app = Dash(__name__)
 
-# Define the layout with the graph and sliders
+# Define the layout with the graph on the left and sliders on the right
 app.layout = html.Div([
-    html.H1(id='function-title', style={'fontSize': '50px', 'textAlign': 'center'}),
-    dcc.Graph(id='interactive-graph', style={'height': '700px'}),
-    html.Label('Valeur de r', style={'fontSize': '24px'}),
-    html.Div([  # Wrap slider in Div for styling
-        dcc.Slider(
-            id='r-slider',
-            min=-10000,
-            max=10000,
-            value=0,
-            step=1000,
-            marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
-        )
-    ], style={'width': '300px', 'margin': 'auto'}),
-    html.Label('Valeur de p', style={'fontSize': '24px'}),
-    html.Div([  # Wrap slider in Div for styling
-        dcc.Slider(
-            id='p-slider',
-            min=2000,
-            max=2025,
-            value=2010,
-            step=1,
-            marks={i: str(i) for i in range(2000, 2026, 5)}
-        )
-    ], style={'width': '300px', 'margin': 'auto'}),
-    html.Label('Valeur de u_p', style={'fontSize': '24px'}),
-    html.Div([  # Wrap slider in Div for styling
-        dcc.Slider(
-            id='up-slider',
-            min=-100000,
-            max=100000,
-            value=0,
-            step=1000,
-            marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
-        )
-    ], style={'width': '300px', 'margin': 'auto'}),
-    html.Label('Valeur de n_0', style={'fontSize': '24px'}),
-    html.Div([  # Wrap slider in Div for styling
-        dcc.Slider(
-            id='n0-slider',
-            min=2000,
-            max=2025,
-            value=2000,
-            step=1,
-            marks={i: str(i) for i in range(2000, 2026, 5)}
-        )
-    ], style={'width': '300px', 'margin': 'auto'})
-], style={'textAlign': 'center', 'padding': '20px', 'maxWidth': '800px', 'margin': 'auto'})
+    html.Div([
+        dcc.Markdown(id='function-title', mathjax=True, style={'fontSize': '50px', 'textAlign': 'center'}),
+        dcc.Graph(id='interactive-graph', style={'height': '700px'}),
+    ], style={'flex': '3', 'padding': '20px'}),
+    html.Div([
+        html.Label('Valeur de r', style={'fontSize': '24px', 'textAlign': 'center'}),
+        html.Div([
+            dcc.Slider(
+                id='r-slider',
+                min=-10000,
+                max=10000,
+                value=0,
+                step=1000,
+                marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
+            )
+        ], style={'width': '250px', 'margin': '10px auto'}),
+        html.Label('Valeur de p', style={'fontSize': '24px', 'textAlign': 'center'}),
+        html.Div([
+            dcc.Slider(
+                id='p-slider',
+                min=2000,
+                max=2025,
+                value=2010,
+                step=1,
+                marks={i: str(i) for i in range(2000, 2026, 5)}
+            )
+        ], style={'width': '250px', 'margin': '10px auto'}),
+        html.Label('Valeur de u_p', style={'fontSize': '24px', 'textAlign': 'center'}),
+        html.Div([
+            dcc.Slider(
+                id='up-slider',
+                min=-100000,
+                max=100000,
+                value=0,
+                step=1000,
+                marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
+            )
+        ], style={'width': '250px', 'margin': '10px auto'}),
+        html.Label('Valeur de n_0', style={'fontSize': '24px', 'textAlign': 'center'}),
+        html.Div([
+            dcc.Slider(
+                id='n0-slider',
+                min=2000,
+                max=2025,
+                value=2000,
+                step=1,
+                marks={i: str(i) for i in range(2000, 2026, 5)}
+            )
+        ], style={'width': '250px', 'margin': '10px auto'})
+    ], style={'flex': '1', 'padding': '20px', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'})
+], style={'display': 'flex', 'flex-direction': 'row', 'align-items': 'stretch', 'maxWidth': '1200px', 'margin': 'auto', 'padding': '20px'})
 
 # Callback to update p-slider min and value based on n0
 @app.callback(
@@ -111,8 +115,8 @@ def update_graph(r, p, up, n0):
         yaxis_range=[-100000, 100000]
     )
     
-    # Dynamic function display
-    function_str = f'u_n = {r:.1f}(n - {p:.1f}) + {up:.1f}'
+    # Dynamic function display in LaTeX
+    function_str = f'$$u_n = {r:g}(n - {p:g}) + {up:g}$$'
     
     return fig, function_str
 
