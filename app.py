@@ -13,59 +13,89 @@ from dash import Dash, dcc, html, Input, Output
 # Initialize the Dash app
 app = Dash(__name__)
 
-# Define the layout with the graph on the left and sliders on the right
-app.layout = html.Div([
-    html.Div([
-        dcc.Markdown(id='function-title', mathjax=True, style={'fontSize': '50px', 'textAlign': 'center'}),
-        dcc.Graph(id='interactive-graph', style={'height': '700px'}),
-    ], style={'flex': '3', 'padding': '20px'}),
-    html.Div([
-        html.Label('Valeur de r', style={'fontSize': '24px', 'textAlign': 'center'}),
+# Define the main layout with tabs
+app.layout = dcc.Tabs([
+    dcc.Tab(label='Suite Linéaire', children=[
         html.Div([
-            dcc.Slider(
-                id='r-slider',
-                min=-10000,
-                max=10000,
-                value=0,
-                step=1000,
-                marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
-            )
-        ], style={'width': '250px', 'margin': '10px auto'}),
-        html.Label('Valeur de p', style={'fontSize': '24px', 'textAlign': 'center'}),
+            html.Div([
+                dcc.Markdown(id='function-title', mathjax=True, style={'fontSize': '50px', 'textAlign': 'center'}),
+                dcc.Graph(id='interactive-graph', style={'height': '700px'}),
+            ], style={'flex': '3', 'padding': '20px'}),
+            html.Div([
+                html.Label('Valeur de r', style={'fontSize': '24px', 'textAlign': 'center'}),
+                html.Div([
+                    dcc.Slider(
+                        id='r-slider',
+                        min=-10000,
+                        max=10000,
+                        value=0,
+                        step=1000,
+                        marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
+                    )
+                ], style={'width': '250px', 'margin': '10px auto'}),
+                html.Label('Valeur de p', style={'fontSize': '24px', 'textAlign': 'center'}),
+                html.Div([
+                    dcc.Slider(
+                        id='p-slider',
+                        min=2000,
+                        max=2025,
+                        value=2010,
+                        step=1,
+                        marks={i: str(i) for i in range(2000, 2026, 5)}
+                    )
+                ], style={'width': '250px', 'margin': '10px auto'}),
+                html.Label('Valeur de u_p', style={'fontSize': '24px', 'textAlign': 'center'}),
+                html.Div([
+                    dcc.Slider(
+                        id='up-slider',
+                        min=-100000,
+                        max=100000,
+                        value=0,
+                        step=1000,
+                        marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
+                    )
+                ], style={'width': '250px', 'margin': '10px auto'}),
+                html.Label('Valeur de n_0', style={'fontSize': '24px', 'textAlign': 'center'}),
+                html.Div([
+                    dcc.Slider(
+                        id='n0-slider',
+                        min=2000,
+                        max=2025,
+                        value=2000,
+                        step=1,
+                        marks={i: str(i) for i in range(2000, 2026, 5)}
+                    )
+                ], style={'width': '250px', 'margin': '10px auto'})
+            ], style={'flex': '1', 'padding': '20px', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'})
+        ], style={'display': 'flex', 'flex-direction': 'row', 'align-items': 'stretch', 'maxWidth': '1200px', 'margin': 'auto', 'padding': '20px'})
+    ]),
+    dcc.Tab(label='Placement Financier et Constante e', children=[
         html.Div([
-            dcc.Slider(
-                id='p-slider',
-                min=2000,
-                max=2025,
-                value=2010,
-                step=1,
-                marks={i: str(i) for i in range(2000, 2026, 5)}
-            )
-        ], style={'width': '250px', 'margin': '10px auto'}),
-        html.Label('Valeur de u_p', style={'fontSize': '24px', 'textAlign': 'center'}),
-        html.Div([
-            dcc.Slider(
-                id='up-slider',
-                min=-100000,
-                max=100000,
-                value=0,
-                step=1000,
-                marks={i: f'{i//1000}k' for i in range(-100000, 100001, 25000)}
-            )
-        ], style={'width': '250px', 'margin': '10px auto'}),
-        html.Label('Valeur de n_0', style={'fontSize': '24px', 'textAlign': 'center'}),
-        html.Div([
-            dcc.Slider(
-                id='n0-slider',
-                min=2000,
-                max=2025,
-                value=2000,
-                step=1,
-                marks={i: str(i) for i in range(2000, 2026, 5)}
-            )
-        ], style={'width': '250px', 'margin': '10px auto'})
-    ], style={'flex': '1', 'padding': '20px', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'})
-], style={'display': 'flex', 'flex-direction': 'row', 'align-items': 'stretch', 'maxWidth': '1200px', 'margin': 'auto', 'padding': '20px'})
+            html.Div([
+                dcc.Markdown('''
+                    ### La constante e comme limite d'un placement financier
+                    La constante mathématique e (environ 2.718) peut être vue comme la limite d'un placement financier avec intérêts composés.
+                    Si vous investissez 1 unité à un taux d'intérêt de 100% par an, composé n fois par an, le montant final après 1 an est $(1 + \\frac{1}{n})^n$.
+                    À mesure que n augmente (composition plus fréquente), cette valeur approche e, correspondant à une composition continue.
+                ''', mathjax=True, style={'fontSize': '20px', 'textAlign': 'center', 'padding': '10px'}),
+                dcc.Graph(id='e-graph', style={'height': '500px'}),
+            ], style={'flex': '3', 'padding': '20px'}),
+            html.Div([
+                html.Label('Valeur maximale de n', style={'fontSize': '24px', 'textAlign': 'center'}),
+                html.Div([
+                    dcc.Slider(
+                        id='max-n-slider',
+                        min=1,
+                        max=10000,
+                        value=100,
+                        step=100,
+                        marks={i: f'{i}' for i in [1, 10, 100, 1000, 10000]}
+                    )
+                ], style={'width': '250px', 'margin': '10px auto'})
+            ], style={'flex': '1', 'padding': '20px', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'})
+        ], style={'display': 'flex', 'flex-direction': 'row', 'align-items': 'stretch', 'maxWidth': '1200px', 'margin': 'auto', 'padding': '20px'})
+    ])
+])
 
 # Callback to update p-slider min and value based on n0
 @app.callback(
@@ -79,7 +109,7 @@ def update_p_slider(n0, current_p):
     new_value = max(min_p, current_p)
     return min_p, new_value
 
-# Define the callback to update the graph and title based on slider values
+# Define the callback to update the graph and title based on slider values for the linear suite
 @app.callback(
     [Output('interactive-graph', 'figure'),
      Output('function-title', 'children')],
@@ -120,6 +150,33 @@ def update_graph(r, p, up, n0):
     
     return fig, function_str
 
+# Define the callback to update the e graph based on max_n slider
+@app.callback(
+    Output('e-graph', 'figure'),
+    Input('max-n-slider', 'value')
+)
+def update_e_graph(max_n):
+    # Generate n values from 1 to max_n
+    n = np.arange(1, max_n + 1)
+    # Compute (1 + 1/n)^n
+    values = (1 + 1/n) ** n
+    
+    # Create the figure
+    fig = go.Figure()
+    # Add the curve
+    fig.add_trace(go.Scatter(x=n, y=values, mode='lines', name='(1 + 1/n)^n'))
+    # Add horizontal line at e
+    fig.add_trace(go.Scatter(x=[1, max_n], y=[np.e, np.e], mode='lines', 
+                             line=dict(dash='dash', color='red'), name='e ≈ 2.718'))
+    
+    fig.update_layout(
+        xaxis_title='n (nombre de compositions)',
+        yaxis_title='Montant final',
+        xaxis_type='log' if max_n > 100 else 'linear',  # Log scale for large n
+        yaxis_range=[1, 3]
+    )
+    
+    return fig
 
 # Expose the server for deployment (e.g., with Gunicorn)
 server = app.server
